@@ -1,5 +1,7 @@
 package test.endtoend.auctionsniper;
 
+import org.hamcrest.Matcher;
+
 import auctionsniper.Main;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
@@ -16,8 +18,7 @@ public class AuctionSniperDriver extends JFrameDriver {
                 JFrameDriver.topLevelFrame(named(Main.MAIN_WINDOW_NAME), showingOnScreen()), new AWTEventQueueProber(timeoutMillis, 100));
     }
     
-    @SuppressWarnings("unchecked")
     public void showsSniperStatus(String statusText) {
-        new JLabelDriver(this, named(Main.SNIPER_STATUS_NAME)).hasText(equalTo(statusText));
+        new JLabelDriver(this, named(Main.SNIPER_STATUS_NAME)).hasText((Matcher<String>) equalTo(statusText));
     }
 }
