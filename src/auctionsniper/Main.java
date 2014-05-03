@@ -6,10 +6,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
 
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import auctionsniper.ui.MainWindow;
 
@@ -27,7 +25,6 @@ public class Main implements SniperListener {
 
     private MainWindow ui;
     @SuppressWarnings("unused")
-    private Chat notToBeGC;
     
     public Main() throws Exception {
         startUserInterface();
@@ -53,28 +50,11 @@ public class Main implements SniperListener {
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconnectWhenUICloses(connection);
         final Chat chat = connection.getChatManager().createChat( auctionId(itemId, connection), null);
-        this.notToBeGC = chat;
         
-        Auction auction = new Auction() {
-            
-            @Override
-            public void bid(int amount) {
-                try {
-                    chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount));
-                } catch (XMPPException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void join() {
-                // TODO Auto-generated method stub
-                
-            }
-        };
+        Auction auction = new XMPPAuction(chat);
         
         chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
-        chat.sendMessage(Main.JOIN_COMMAND_FORMAT);
+        auction.join();
     }
     
     private void disconnectWhenUICloses(final XMPPConnection connection) {
