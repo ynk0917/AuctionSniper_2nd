@@ -65,6 +65,12 @@ public class Main implements SniperListener {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void join() {
+                // TODO Auto-generated method stub
+                
+            }
         };
         
         chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
