@@ -19,6 +19,8 @@ public class Main {
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
+    public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
+    public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: Bid; Price: %d";
 
     private MainWindow ui;
     @SuppressWarnings("unused")
@@ -63,7 +65,7 @@ public class Main {
                 });
         this.notToBeGC = chat;
         
-        chat.sendMessage(new Message());
+        chat.sendMessage(Main.JOIN_COMMAND_FORMAT);
     }
     
     private static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException {
