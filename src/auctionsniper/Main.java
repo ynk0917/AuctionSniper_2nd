@@ -52,7 +52,7 @@ public class Main {
         
         Auction auction = new XMPPAuction(chat);
         
-        chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(), new AuctionSniper(auction, new SniperStateDisplayer())));
+        chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(), new AuctionSniper(null, auction, new SniperStateDisplayer())));
         auction.join();
     }
     
@@ -86,7 +86,7 @@ public class Main {
         }
 
         @Override
-        public void sniperBidding() {
+        public void sniperBidding(SniperState sniperState) {
             showStatus(MainWindow.STATUS_BIDDING);
         }
 
@@ -108,12 +108,6 @@ public class Main {
                 }
             });
 
-        }
-
-        @Override
-        public void sniperBidding(SniperState sniperState) {
-            // TODO Auto-generated method stub
-            
         }
     }
 }
