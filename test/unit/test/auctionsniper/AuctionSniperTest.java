@@ -57,4 +57,20 @@ public class AuctionSniperTest {
         }});
         sniper.auctionClosed();
     }
+    
+    @Test
+    public void reportsLostIfAuctionClosesWhenBidding() {
+        context.checking(new Expectations() {{
+            ignoring(auction);
+            allowing(sniperListener).sniperBidding();
+                                    then(sniperState.is("bidding"));
+                                    
+            atLeast(1).of(sniperListener).sniperLost();
+                                    when(sniperState.is("bidding"));
+        }});
+        
+        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+        sniper.auctionClosed();
+        
+    }
 }
