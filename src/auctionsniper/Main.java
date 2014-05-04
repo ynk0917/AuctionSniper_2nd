@@ -24,7 +24,6 @@ public class Main {
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Event: Bid; Price: %d";
 
     private MainWindow ui;
-    @SuppressWarnings("unused")
     
     public Main() throws Exception {
         startUserInterface();
