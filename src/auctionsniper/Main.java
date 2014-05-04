@@ -100,5 +100,11 @@ public class Main {
             });
 
         }
+
+        @Override
+        public void sniperWinning() {
+            // TODO Auto-generated method stub
+            
+        }
     }
 }
