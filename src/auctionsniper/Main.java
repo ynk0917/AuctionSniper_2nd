@@ -109,5 +109,11 @@ public class Main {
             });
 
         }
+
+        @Override
+        public void sniperBidding(SniperState sniperState) {
+            // TODO Auto-generated method stub
+            
+        }
     }
 }
