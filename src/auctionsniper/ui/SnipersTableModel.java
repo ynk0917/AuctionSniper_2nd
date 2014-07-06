@@ -2,6 +2,7 @@ package auctionsniper.ui;
 
 import javax.swing.table.AbstractTableModel;
 
+import auctionsniper.Column;
 import auctionsniper.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel {
@@ -11,7 +12,7 @@ public class SnipersTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 1;
+        return Column.values().length;
     }
 
     @Override
