@@ -34,6 +34,11 @@ public class SnipersTableModel extends AbstractTableModel {
         return Column.at(columnIndex).valueIn(snapshot);
     }
     
+    @Override
+    public String getColumnName(int columnIndex) {
+        return Column.at(columnIndex).name;
+    }
+    
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
     }
