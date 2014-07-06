@@ -10,6 +10,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
 
 public class Main {
     private static final int ARG_HOSTNAME = 0;
@@ -23,6 +24,7 @@ public class Main {
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Event: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Event: Bid; Price: %d";
 
+    private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
     
     public Main() throws Exception {
@@ -34,7 +36,7 @@ public class Main {
             
             @Override
             public void run() {
-                ui = new MainWindow();
+                ui = new MainWindow(snipers);
             }
         });
     }
@@ -52,7 +54,11 @@ public class Main {
         
         Auction auction = new XMPPAuction(chat);
         
-        chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(), new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
+        chat.addMessageListener(
+                new AuctionMessageTranslator(
+                        connection.getUser(), 
+                        new AuctionSniper(itemId, auction,
+                                new SwingThreadSniperListener(snipers))));
         auction.join();
     }
     
@@ -77,11 +83,16 @@ public class Main {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
-    class SniperStateDisplayer implements SniperListener {
+    class SwingThreadSniperListener implements SniperListener {
+        private SnipersTableModel snipers;
+        
+        public SwingThreadSniperListener(SnipersTableModel snipers) {
+            this.snipers = snipers;
+        }
 
         @Override
         public void sniperStateChanged(SniperSnapshot snapshot) {
-            ui.sniperStatusChanged(snapshot);
+            snipers.sniperStatusChanged(snapshot);
         }
     }
 }
