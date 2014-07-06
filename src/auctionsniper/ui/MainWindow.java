@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import auctionsniper.SniperState;
+
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -47,5 +49,9 @@ public class MainWindow extends JFrame {
 
     public void showStatus(String statusText) {
         snipers.setStatusText(statusText);
+    }
+    
+    public void sniperStatusChanged(SniperState sniperState, String statusText) {
+        snipers.sniperStatusChanged(sniperState, statusText);
     }
 }

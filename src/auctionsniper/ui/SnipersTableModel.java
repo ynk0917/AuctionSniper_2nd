@@ -2,6 +2,8 @@ package auctionsniper.ui;
 
 import javax.swing.table.AbstractTableModel;
 
+import auctionsniper.SniperState;
+
 public class SnipersTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 6638492513334189284L;
     
@@ -25,5 +27,10 @@ public class SnipersTableModel extends AbstractTableModel {
     public void setStatusText(String newStatusText) {
         statusText = newStatusText;
         fireTableCellUpdated(0, 0);
+    }
+
+    public void sniperStatusChanged(SniperState sniperState, String newStatusText) {
+        // TODO Auto-generated method stub
+        
     }
 }
