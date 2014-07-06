@@ -86,7 +86,7 @@ public class Main {
         }
 
         @Override
-        public void sniperBidding(SniperState sniperState) {
+        public void sniperBidding(SniperSnapshot sniperState) {
             ui.sniperStatusChanged(sniperState, MainWindow.STATUS_BIDDING);
         }
 
