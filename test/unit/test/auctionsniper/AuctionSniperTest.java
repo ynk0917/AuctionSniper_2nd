@@ -13,6 +13,7 @@ import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
 import auctionsniper.AuctionEventListener.PriceSource;
 import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
@@ -40,7 +41,7 @@ public class AuctionSniperTest {
         final int bid = price + increment;
         context.checking(new Expectations() {{
             one(auction).bid(price + increment);
-            atLeast(1).of(sniperListener).sniperBidding(new SniperSnapshot(ITEM_ID, price, bid));
+            atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING));
         }});
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
@@ -66,7 +67,7 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperBidding(with(any(SniperSnapshot.class)));
+            allowing(sniperListener).sniperStateChanged(with(any(SniperSnapshot.class)));
                                     then(sniperState.is("bidding"));
                                     
             atLeast(1).of(sniperListener).sniperLost();

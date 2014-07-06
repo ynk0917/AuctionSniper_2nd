@@ -4,11 +4,12 @@ import javax.swing.table.AbstractTableModel;
 
 import auctionsniper.Column;
 import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 6638492513334189284L;
     
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0);
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
     private String statusText = MainWindow.STATUS_JOINING;
     private SniperSnapshot sniperState = STARTING_UP;
 

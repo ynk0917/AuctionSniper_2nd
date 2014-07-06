@@ -7,12 +7,14 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class SniperSnapshot {
     public final String itemId;
     public final int lastPrice;
-    public int lastBid;
+    public final int lastBid;
+    public final SniperState state;
     
-    public SniperSnapshot(String itemId, int lastPrice, int lastBid) {
+    public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperState sniperState) {
         this.itemId = itemId;
         this.lastPrice = lastPrice;
         this.lastBid = lastBid;
+        this.state = sniperState;
     }
     
     @Override
