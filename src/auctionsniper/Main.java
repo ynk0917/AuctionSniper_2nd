@@ -89,11 +89,6 @@ public class Main {
         public void sniperStateChanged(SniperSnapshot snapshot) {
             ui.sniperStatusChanged(snapshot);
         }
-
-        @Override
-        public void sniperWinning() {
-            showStatus(MainWindow.STATUS_WINNING);
-        }
         
         @Override
         public void sniperWon() {
