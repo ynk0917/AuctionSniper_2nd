@@ -46,10 +46,6 @@ public class MainWindow extends JFrame {
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
     }
-
-    public void showStatus(String statusText) {
-        snipers.setStatusText(statusText);
-    }
     
     public void sniperStatusChanged(SniperSnapshot snapshot) {
         snipers.sniperStatusChanged(snapshot);
