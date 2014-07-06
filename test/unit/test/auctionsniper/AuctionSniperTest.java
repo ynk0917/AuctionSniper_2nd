@@ -32,7 +32,7 @@ public class AuctionSniperTest {
     @Test
     public void reportsLostWhenAuctionCloses() {
         context.checking(new Expectations() {{
-            atLeast(1).of(sniperListener).sniperLost();
+            atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.LOST)));
         }});
         
         sniper.auctionClosed();
@@ -44,7 +44,7 @@ public class AuctionSniperTest {
         final int increment = 25;
         final int bid = price + increment;
         context.checking(new Expectations() {{
-            one(auction).bid(price + increment);
+            one(auction).bid(bid);
             atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING));
         }});
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
@@ -69,7 +69,7 @@ public class AuctionSniperTest {
     @Test
     public void reportsLostIfAuctionClosesImmediately() {
         context.checking(new Expectations() {{
-            atLeast(1).of(sniperListener).sniperLost();
+            atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.LOST)));
         }});
         sniper.auctionClosed();
     }
@@ -81,7 +81,7 @@ public class AuctionSniperTest {
             allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
                                     then(sniperState.is("bidding"));
                                     
-            atLeast(1).of(sniperListener).sniperLost();
+            atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.LOST)));
                                     when(sniperState.is("bidding"));
         }});
         
@@ -96,7 +96,7 @@ public class AuctionSniperTest {
             ignoring(auction);
             allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING))); then(sniperState.is("winning"));
             
-            atLeast(1).of(sniperListener).sniperWon(); when(sniperState.is("winning"));
+            atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WON))); when(sniperState.is("winning"));
         }});
         
         sniper.currentPrice(123, 45, PriceSource.FromSniper);
