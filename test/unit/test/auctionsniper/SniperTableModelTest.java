@@ -3,9 +3,8 @@ package test.auctionsniper;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertThat;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -20,7 +19,6 @@ import org.junit.runner.RunWith;
 
 import auctionsniper.Column;
 import auctionsniper.SniperSnapshot;
-import auctionsniper.SniperState;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 
@@ -43,16 +41,25 @@ public class SniperTableModelTest {
     @Test
     public void setSniperValuesInColumns() {
         context.checking(new Expectations() {{
-            one(listener).tableChanged(with(aRowChangeEevent()));;
+            allowing(listener).tableChanged(with(anyInsertionEvent()));;
+            
+            one(listener).tableChanged(with(aChangeInRow(0)));
         }});
         
-        model.sniperStatusChanged(new SniperSnapshot("item id", 555, 666, SniperState.BIDDING));
+        SniperSnapshot joining = SniperSnapshot.joining("item id");
+        SniperSnapshot bidding = joining.bidding(555, 666);
+        model.addSniper(joining);
+        model.sniperStatusChanged(bidding);
         
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
         assertColumnEquals(Column.SNIPER_STATE, MainWindow.STATUS_BIDDING);
     }
+    
+    private Matcher<TableModelEvent> aChangeInRow(int row) {
+        return samePropertyValuesAs(new TableModelEvent(model, row));
+    } 
     
     @Test
     public void setsUpColumnHeadings() {
@@ -79,10 +86,6 @@ public class SniperTableModelTest {
     
     private Matcher<TableModelEvent> anyInsertionEvent() {
         return hasProperty("type", equalTo(TableModelEvent.INSERT));
-    }
-
-    private Matcher<TableModelEvent> aRowChangeEevent() {
-        return samePropertyValuesAs(new TableModelEvent(model, 0));
     }
     
     private void assertRowMatchesSnapshot(int row, SniperSnapshot snapshot) {

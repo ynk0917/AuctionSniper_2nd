@@ -1,5 +1,8 @@
 package auctionsniper.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 import auctionsniper.Column;
@@ -9,7 +12,6 @@ import auctionsniper.SniperState;
 public class SnipersTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 6638492513334189284L;
     
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
     private static String[] STATUS_TEXT = { 
         "Joining",
         "Bidding",
@@ -17,7 +19,7 @@ public class SnipersTableModel extends AbstractTableModel {
         "Lost",
         "Won"
         };
-    private SniperSnapshot snapshot = STARTING_UP;
+    private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
 
     @Override
     public int getColumnCount() {
@@ -26,12 +28,12 @@ public class SnipersTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return 1;
+        return snapshots.size();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return Column.at(columnIndex).valueIn(snapshot);
+        return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
     }
     
     @Override
@@ -44,12 +46,12 @@ public class SnipersTableModel extends AbstractTableModel {
     }
 
     public void sniperStatusChanged(SniperSnapshot newSnapshot) {
-        this.snapshot = newSnapshot;
+        snapshots.set(0, newSnapshot);
         fireTableRowsUpdated(0, 0);
     }
 
     public void addSniper(SniperSnapshot joining) {
-        // TODO Auto-generated method stub
-        
+        snapshots.add(joining);
+        fireTableRowsInserted(0, 0);
     }
 }
