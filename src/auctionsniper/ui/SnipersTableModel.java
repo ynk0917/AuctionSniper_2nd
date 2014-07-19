@@ -47,4 +47,9 @@ public class SnipersTableModel extends AbstractTableModel {
         this.snapshot = newSnapshot;
         fireTableRowsUpdated(0, 0);
     }
+
+    public void addSniper(SniperSnapshot joining) {
+        // TODO Auto-generated method stub
+        
+    }
 }
