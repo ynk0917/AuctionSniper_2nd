@@ -2,6 +2,8 @@ package auctionsniper;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -27,6 +29,8 @@ public class Main {
     private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
     
+    private List<Chat> notToBeGCd = new ArrayList<Chat>();
+    
     public Main() throws Exception {
         startUserInterface();
     }
@@ -43,16 +47,20 @@ public class Main {
     
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        main.joinAuction(
-                connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),
-                args[ARG_ITEM_ID]);
+        XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        main.disconnectWhenUICloses(connection);
+        
+        for (int i = 3; i < args.length; ++i) {
+            main.joinAuction(connection, args[i]);
+        }
     }
     
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-        disconnectWhenUICloses(connection);
         final Chat chat = connection.getChatManager().createChat( auctionId(itemId, connection), null);
         
         Auction auction = new XMPPAuction(chat);
+        
+        notToBeGCd.add(chat);
         
         chat.addMessageListener(
                 new AuctionMessageTranslator(
