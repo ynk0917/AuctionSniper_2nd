@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.objogate.exception.Defect;
+
 import auctionsniper.Column;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
@@ -46,8 +48,18 @@ public class SnipersTableModel extends AbstractTableModel {
     }
 
     public void sniperStatusChanged(SniperSnapshot newSnapshot) {
-        snapshots.set(0, newSnapshot);
-        fireTableRowsUpdated(0, 0);
+        int row = rowMatching(newSnapshot);
+        snapshots.set(row, newSnapshot);
+        fireTableRowsUpdated(row, row);
+    }
+    
+    private int rowMatching(SniperSnapshot newSnapshot) {
+        for (int i = 0; i < snapshots.size(); ++i) {
+            if (newSnapshot.isForSameItemAs(snapshots.get(i))) {
+                return i;
+            }
+        }
+        throw new Defect("Cannot find match for " + snapshots);
     }
 
     public void addSniper(SniperSnapshot joining) {
