@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import auctionsniper.UserRequestListener;
+
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -64,4 +66,7 @@ public class MainWindow extends JFrame {
         
         return controls;
     }
+
+    public void addUserRequestListener(UserRequestListener userRequestListener) {
     }
+}
