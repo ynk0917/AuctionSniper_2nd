@@ -21,6 +21,8 @@ public class MainWindow extends JFrame {
     public static final String STATUS_WON = "Won";
     
     private static final String SNIPERS_TABLE_NAME = "";
+    public static final String NEW_ITEM_ID_NAME = "item id";
+    public static final String JOIN_BUTTON_NAME = "join button";
 
     public MainWindow(SnipersTableModel snipers) {
         super("Auction Sniper");
