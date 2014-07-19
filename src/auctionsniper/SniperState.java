@@ -1,6 +1,7 @@
 package auctionsniper;
 
-import com.objogate.exception.Defect;
+import auctionsniper.util.Defect;
+
 
 public enum SniperState {
     JOINING {

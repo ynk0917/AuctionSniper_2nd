@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.objogate.exception.Defect;
 
 import auctionsniper.Column;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
+import auctionsniper.util.Defect;
 
 public class SnipersTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 6638492513334189284L;
