@@ -12,6 +12,7 @@ import org.jivesoftware.smack.XMPPException;
 
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
+import auctionsniper.xmpp.XMPPAuction;
 
 public class Main {
     private static final int ARG_HOSTNAME = 0;

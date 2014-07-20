@@ -1,9 +1,12 @@
-package auctionsniper;
+package auctionsniper.xmpp;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
+import auctionsniper.Auction;
+import auctionsniper.AuctionEventListener;
+import auctionsniper.Main;
 import auctionsniper.util.Announcer;
 
 public class XMPPAuction implements Auction {
