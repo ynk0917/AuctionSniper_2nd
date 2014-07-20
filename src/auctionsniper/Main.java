@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -28,7 +27,7 @@ public class Main {
     private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
     
-    private List<Chat> notToBeGCd = new ArrayList<Chat>();
+    private List<Auction> notToBeGCd = new ArrayList<Auction>();
     
     public Main() throws Exception {
         startUserInterface();
@@ -57,19 +56,12 @@ public class Main {
             @Override
             public void joinAuction(String itemId) {
                 snipers.addSniper(SniperSnapshot.joining(itemId));
-                final Chat chat = connection.getChatManager().createChat( auctionId(itemId, connection), null);
-
-                Auction auction = new XMPPAuction(chat);
-
-                notToBeGCd.add(chat);
-
-                chat.addMessageListener(
-                        new AuctionMessageTranslator(
-                                connection.getUser(), 
+                Auction auction = new XMPPAuction(connection, itemId);
+                notToBeGCd.add(auction);
+                auction.addAuctionEventListener(
                                 new AuctionSniper(itemId, auction,
-                                        new SwingThreadSniperListener(snipers))));
+                                        new SwingThreadSniperListener(snipers)));
                 auction.join();
-                
             }
         });
     }
@@ -91,10 +83,6 @@ public class Main {
         return connection;
     }
     
-    private static String auctionId(String itemId, XMPPConnection connection) {
-        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
-    }
-
     class SwingThreadSniperListener implements SniperListener {
         private SnipersTableModel snipers;
         
