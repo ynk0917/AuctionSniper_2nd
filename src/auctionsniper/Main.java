@@ -19,8 +19,6 @@ public class Main {
     private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
     
-    private List<Auction> notToBeGCd = new ArrayList<Auction>();
-    
     public Main() throws Exception {
         startUserInterface();
     }
@@ -44,19 +42,7 @@ public class Main {
     }
     
     private void addUserRequestListenerFor(final AuctionHouse auctionHouse) throws Exception {
-        ui.addUserRequestListener(new UserRequestListener() {
-            
-            @Override
-            public void joinAuction(String itemId) {
-                snipers.addSniper(SniperSnapshot.joining(itemId));
-                Auction auction = auctionHouse.auctionFor(itemId);
-                notToBeGCd.add(auction);
-                auction.addAuctionEventListener(
-                                new AuctionSniper(itemId, auction,
-                                        new SwingThreadSniperListener(snipers)));
-                auction.join();
-            }
-        });
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
     }
 
     private void disconnectWhenUICloses(final XMPPAuctionHouse xmppAuctionHouse) {
@@ -79,6 +65,27 @@ public class Main {
         @Override
         public void sniperStateChanged(SniperSnapshot snapshot) {
             snipers.sniperStatusChanged(snapshot);
+        }
+    }
+    
+    public class SniperLauncher implements UserRequestListener {
+        private final List<Auction> notToBeGCd = new ArrayList<Auction>();
+        private final AuctionHouse auctionHouse;
+        private final SnipersTableModel snipers;
+
+        public SniperLauncher(AuctionHouse auctionHouse, SnipersTableModel snipers) {
+            this.auctionHouse = auctionHouse;
+            this.snipers = snipers;
+        }
+
+        @Override
+        public void joinAuction(String itemId) {
+            snipers.addSniper(SniperSnapshot.joining(itemId));
+            Auction auction = auctionHouse.auctionFor(itemId);
+            notToBeGCd.add(auction);
+            AuctionSniper sniper = new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers));
+            auction.addAuctionEventListener(sniper);
+            auction.join();
         }
     }
 }
