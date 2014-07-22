@@ -5,9 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,29 +14,39 @@ import test.endtoend.auctionsniper.ApplicationRunner;
 import test.endtoend.auctionsniper.FakeAuctionServer;
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
-import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 
-public class XMPPAuctionTest {
-    private final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
-    private XMPPConnection connection;
+public class XMPPAuctionHouseTest {
+    private final FakeAuctionServer auctionServer = new FakeAuctionServer("item54321");
+    private XMPPAuctionHouse auctionHouse;
 
     @Before
-    public void connect() throws XMPPException {
+    public void openConnection() throws XMPPException {
+        auctionHouse= XMPPAuctionHouse.connect(FakeAuctionServer.XMPP_HOSTNAME, ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD);
+    }
+    
+    @Before
+    public void startAuction() throws XMPPException {
         auctionServer.startSellingItem();
-        connection = new XMPPConnection(FakeAuctionServer.XMPP_HOSTNAME);
-        try {
-            connection.connect();
-            connection.login(ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD, FakeAuctionServer.AUCTION_RESOURCE);
-        } catch (XMPPException xmppe) {
-            Assert.fail();
+    }
+    
+    @After
+    public void closeConnection() {
+        if (auctionHouse != null) {
+            auctionHouse.disconnect();
         }
+    }
+    
+    @After
+    public void stopAuction() {
+        auctionServer.stop();
     }
 
     @Test
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
         
-        Auction auction = new XMPPAuction(connection, auctionServer.getItemId());
+        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
         
         auction.join();
