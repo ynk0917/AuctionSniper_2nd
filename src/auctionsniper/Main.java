@@ -53,19 +53,6 @@ public class Main {
         });
     }
     
-    class SwingThreadSniperListener implements SniperListener {
-        private SnipersTableModel snipers;
-        
-        public SwingThreadSniperListener(SnipersTableModel snipers) {
-            this.snipers = snipers;
-        }
-
-        @Override
-        public void sniperStateChanged(SniperSnapshot snapshot) {
-            snipers.sniperStatusChanged(snapshot);
-        }
-    }
-    
     public static class SniperLauncher implements UserRequestListener {
         private final AuctionHouse auctionHouse;
         private final SniperCollector collector;
