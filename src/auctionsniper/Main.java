@@ -2,8 +2,6 @@ package auctionsniper;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -69,7 +67,6 @@ public class Main {
     }
     
     public static class SniperLauncher implements UserRequestListener {
-        private final List<Auction> notToBeGCd = new ArrayList<Auction>();
         private final AuctionHouse auctionHouse;
         private final SniperCollector collector;
 
@@ -81,8 +78,8 @@ public class Main {
         @Override
         public void joinAuction(String itemId) {
             Auction auction = auctionHouse.auctionFor(itemId);
-            notToBeGCd.add(auction);
             AuctionSniper sniper = new AuctionSniper(itemId, auction);
+            auction.addAuctionEventListener(sniper);
             collector.addSniper(sniper);
             auction.join();
         }
