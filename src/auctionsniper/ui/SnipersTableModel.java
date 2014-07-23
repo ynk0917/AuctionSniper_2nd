@@ -9,11 +9,12 @@ import javax.swing.table.AbstractTableModel;
 import auctionsniper.AuctionSniper;
 import auctionsniper.Column;
 import auctionsniper.SniperCollector;
+import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.util.Defect;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperCollector {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, SniperCollector {
     private static final long serialVersionUID = 6638492513334189284L;
     
     private static String[] STATUS_TEXT = { 
@@ -23,7 +24,9 @@ public class SnipersTableModel extends AbstractTableModel implements SniperColle
         "Lost",
         "Won"
         };
+    
     private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
+    private final List<AuctionSniper> notBeGCd = new ArrayList<AuctionSniper>();
 
     @Override
     public int getColumnCount() {
@@ -64,14 +67,29 @@ public class SnipersTableModel extends AbstractTableModel implements SniperColle
         throw new Defect("Cannot find match for " + snapshots);
     }
 
-    public void addSniper(SniperSnapshot joining) {
-        snapshots.add(joining);
-        fireTableRowsInserted(0, 0);
-    }
-
     @Override
     public void addSniper(AuctionSniper sniper) {
-        // TODO Auto-generated method stub
-        
+        notBeGCd.add(sniper);
+        addSniperSnapshot(sniper.getSnapshot());
+        sniper.addSniperListener(new SwingThreadSniperListener(this));
     }
+    
+    private void addSniperSnapshot(SniperSnapshot snapshot) {
+        snapshots.add(snapshot);
+        int row = snapshots.size() - 1;
+        fireTableRowsInserted(row, row);
+    }
+    
+    @Override
+    public void sniperStateChanged(SniperSnapshot newSnapshot) {
+        for (int i = 0; i < snapshots.size(); i++) {
+            if (newSnapshot.isForSameItemAs(snapshots.get(i))) {
+                snapshots.set(i, newSnapshot);
+                fireTableRowsUpdated(i, i);
+                return;
+            }
+        }
+        throw new Defect("No existing Sniper state for " + newSnapshot.itemId);
+    }
+
 }
