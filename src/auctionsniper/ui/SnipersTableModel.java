@@ -6,12 +6,14 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 
+import auctionsniper.AuctionSniper;
 import auctionsniper.Column;
+import auctionsniper.SniperCollector;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.util.Defect;
 
-public class SnipersTableModel extends AbstractTableModel {
+public class SnipersTableModel extends AbstractTableModel implements SniperCollector {
     private static final long serialVersionUID = 6638492513334189284L;
     
     private static String[] STATUS_TEXT = { 
@@ -65,5 +67,11 @@ public class SnipersTableModel extends AbstractTableModel {
     public void addSniper(SniperSnapshot joining) {
         snapshots.add(joining);
         fireTableRowsInserted(0, 0);
+    }
+
+    @Override
+    public void addSniper(AuctionSniper sniper) {
+        // TODO Auto-generated method stub
+        
     }
 }

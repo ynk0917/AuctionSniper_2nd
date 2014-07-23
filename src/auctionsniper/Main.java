@@ -68,23 +68,22 @@ public class Main {
         }
     }
     
-    public class SniperLauncher implements UserRequestListener {
+    public static class SniperLauncher implements UserRequestListener {
         private final List<Auction> notToBeGCd = new ArrayList<Auction>();
         private final AuctionHouse auctionHouse;
-        private final SnipersTableModel snipers;
+        private final SniperCollector collector;
 
-        public SniperLauncher(AuctionHouse auctionHouse, SnipersTableModel snipers) {
+        public SniperLauncher(AuctionHouse auctionHouse, SniperCollector collector) {
             this.auctionHouse = auctionHouse;
-            this.snipers = snipers;
+            this.collector = collector;
         }
 
         @Override
         public void joinAuction(String itemId) {
-            snipers.addSniper(SniperSnapshot.joining(itemId));
             Auction auction = auctionHouse.auctionFor(itemId);
             notToBeGCd.add(auction);
-            AuctionSniper sniper = new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers));
-            auction.addAuctionEventListener(sniper);
+            AuctionSniper sniper = new AuctionSniper(itemId, auction);
+            collector.addSniper(sniper);
             auction.join();
         }
     }
