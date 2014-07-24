@@ -22,6 +22,7 @@ public enum SniperState {
             return WON;
         }
     },
+    LOSING,
     LOST,
     WON;
 
