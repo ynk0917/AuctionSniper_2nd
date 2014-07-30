@@ -72,7 +72,7 @@ public class MainWindow extends JFrame {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                userRequests.announce().joinAuction(itemIdField.getText());
+                userRequests.announce().joinAuction(new UserRequestListener.Item(itemIdField.getText(), 0));
             }
         });
 

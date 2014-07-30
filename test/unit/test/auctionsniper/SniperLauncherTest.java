@@ -2,6 +2,7 @@ package test.auctionsniper;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import auctionsniper.*;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.jmock.Expectations;
@@ -11,11 +12,7 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import auctionsniper.Auction;
-import auctionsniper.AuctionHouse;
-import auctionsniper.AuctionSniper;
 import auctionsniper.Main.SniperLauncher;
-import auctionsniper.SniperCollector;
 
 @RunWith(JMock.class)
 public class SniperLauncherTest {
@@ -40,7 +37,7 @@ public class SniperLauncherTest {
             one(auction).join(); then(auctionState.is("joined"));
         }});
         
-        launcher.joinAuction(itemId);
+        launcher.joinAuction(new UserRequestListener.Item(itemId, 0));
     }
     
     private Matcher<AuctionSniper>sniperForItem(String itemId) {

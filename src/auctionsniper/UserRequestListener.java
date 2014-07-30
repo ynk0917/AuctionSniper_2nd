@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.EventListener;
 
 public interface UserRequestListener extends EventListener {
-    void joinAuction(String itemId);
+    void joinAuction(Item item);
 
     public static class Item {
         public final String identifier;
