@@ -28,6 +28,7 @@ public class ApplicationRunner {
     }
 
     public void startBiddingWithStopPrice(FakeAuctionServer auction, int stopPrice) {
+        startSniper(auction);
         openBidding(auction, stopPrice);
     }
 
