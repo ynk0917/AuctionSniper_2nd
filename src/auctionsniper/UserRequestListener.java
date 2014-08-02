@@ -17,6 +17,10 @@ public interface UserRequestListener extends EventListener {
             this.stopPrice = stopPrice;
         }
 
+        public boolean allowBid(int bid) {
+            return bid <= stopPrice;
+        }
+
         @Override
         public boolean equals(Object rhs) {
             return EqualsBuilder.reflectionEquals(this, rhs);
