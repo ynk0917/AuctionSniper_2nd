@@ -134,4 +134,16 @@ public class AuctionSniperTest {
                         then(sniperState.is("bidding"));
         }});
     }
+
+    @Test public void
+    doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice() {
+        final int price = 1233;
+        final int increment = 25;
+
+        context.checking(new Expectations() {{
+            atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, SniperState.LOSING));
+        }});
+
+        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
+    }
 }
