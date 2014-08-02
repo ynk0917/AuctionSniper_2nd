@@ -39,7 +39,31 @@ public class AuctionSniperTest {
         
         sniper.auctionClosed();
     }
-    
+
+    @Test
+    public void reportsLostIfAuctionClosesWhenLosing() {
+        allowingSniperLosing();
+        context.checking(new Expectations() {{
+            atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, SniperState.LOST));
+            when(sniperState.is("losing"));
+        }});
+
+        sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder);
+        sniper.auctionClosed();
+    }
+
+    private void allowingSniperLosing() {
+        allowSniperStateChange(SniperState.LOSING, "losing");
+    }
+
+    private void allowSniperStateChange(final SniperState newState, final String oldState) {
+        context.checking(new Expectations() {{
+            allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(newState))); then(sniperState.is(oldState));
+        }});
+    }
+
+
+
     @Test
     public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
