@@ -2,6 +2,7 @@ package test.auctionsniper;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import auctionsniper.*;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.jmock.Expectations;
@@ -12,22 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import auctionsniper.Auction;
-import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionEventListener.PriceSource;
-import auctionsniper.AuctionSniper;
-import auctionsniper.SniperListener;
-import auctionsniper.SniperSnapshot;
-import auctionsniper.SniperState;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
     private static final String ITEM_ID = "item_id";
+    private static UserRequestListener.Item ITEM = new UserRequestListener.Item(ITEM_ID, 1234);
     
     private final Mockery context = new Mockery();
     private final SniperListener sniperListener = context.mock(SniperListener.class);
     private final Auction auction = context.mock(Auction.class);
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM, auction);
     private final States sniperState = context.states("sniper");
     
     @Before

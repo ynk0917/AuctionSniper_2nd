@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import auctionsniper.UserRequestListener;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +47,7 @@ public class XMPPAuctionHouseTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
         
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+        Auction auction = auctionHouse.auctionFor(new UserRequestListener.Item(auctionServer.getItemId(), 576));
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
         
         auction.join();
