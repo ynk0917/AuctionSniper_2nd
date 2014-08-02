@@ -90,7 +90,7 @@ public class AuctionSniperEndToEndTest {
 
         auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_XMPP_ID);
 
-        auction.reportPrice(1198, 10, "third party");
+        auction.reportPrice(1197, 10, "third party");
         application.hasShownSniperIsLosing(auction, 1197, 1098);
 
         auction.reportPrice(1207, 10, "fourth party");
