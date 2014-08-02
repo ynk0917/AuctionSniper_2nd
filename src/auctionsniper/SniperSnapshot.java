@@ -39,7 +39,11 @@ public class SniperSnapshot {
     public SniperSnapshot winning(int newLastPrice) {
         return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.WINNING);
     }
-    
+
+    public SniperSnapshot losing(int newLastPrice) {
+        return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.LOSING);
+    }
+
     public static SniperSnapshot joining(String itemId) {
         return new SniperSnapshot(itemId, 0, 0, SniperState.JOINING);
     }
