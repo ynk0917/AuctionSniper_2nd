@@ -93,6 +93,7 @@ public class AuctionSniperEndToEndTest {
         auction.reportPrice(1197, 10, "third party");
         application.hasShownSniperIsLosing(auction, 1197, 1098);
 
+        auction.reportPrice(1207, 10, "fourth party");
         application.hasShownSniperIsLosing(auction, 1207, 1098);
 
         auction.announceClosed();
