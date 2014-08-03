@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import auctionsniper.AuctionEventListener;
 import auctionsniper.xmpp.AuctionMessageTranslator;
+import test.endtoend.auctionsniper.ApplicationRunner;
 
 
 @RunWith(JMock.class)
@@ -64,6 +65,18 @@ public class AuctionMessageTranslatorTest {
 
         Message message = new Message();
         message.setBody("a bad message");
+
+        translator.processMessage(UNUSED_CHAT, message);
+    }
+
+    @Test
+    public void notifiesAuctionFailedWhenEventTypeMissing() {
+        context.checking(new Expectations() {{
+            exactly(1).of(listener).auctionFailed();
+        }});
+
+        Message message = new Message();
+        message.setBody("SQLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + ApplicationRunner.SNIPER_ID + ";");
 
         translator.processMessage(UNUSED_CHAT, message);
     }
