@@ -85,13 +85,9 @@ public class AuctionMessageTranslatorTest {
 
     @Test
     public void notifiesAuctionFailedWhenEventTypeMissing() {
-        context.checking(new Expectations() {{
-            exactly(1).of(listener).auctionFailed();
-        }});
+        String badMessage = "SQLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";";
+        expectFailureWithMessage(badMessage);
 
-        Message message = new Message();
-        message.setBody("SQLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + ApplicationRunner.SNIPER_ID + ";");
-
-        translator.processMessage(UNUSED_CHAT, message);
+        translator.processMessage(UNUSED_CHAT, message(badMessage));
     }
 }
