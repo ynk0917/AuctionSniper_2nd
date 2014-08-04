@@ -1,5 +1,8 @@
 package test.auctionsniper;
 
+import auctionsniper.AuctionEventListener;
+import auctionsniper.xmpp.AuctionMessageTranslator;
+import auctionsniper.xmpp.XMPPFailureReporter;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;
@@ -7,9 +10,6 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import auctionsniper.AuctionEventListener;
-import auctionsniper.xmpp.AuctionMessageTranslator;
 import test.endtoend.auctionsniper.ApplicationRunner;
 
 
@@ -19,7 +19,8 @@ public class AuctionMessageTranslatorTest {
     public static final Chat UNUSED_CHAT = null;
     private final Mockery context = new Mockery();
     private final AuctionEventListener listener = context.mock(AuctionEventListener.class);
-    private final AuctionMessageTranslator translator = new AuctionMessageTranslator(SNIPER_ID, listener);
+    private final XMPPFailureReporter failureReporter = context.mock(XMPPFailureReporter.class);
+    private final AuctionMessageTranslator translator = new AuctionMessageTranslator(SNIPER_ID, listener, failureReporter);
     
     @Test
     public void notifiesAuctionClosedWhenCloseMessageReceived() {
@@ -59,14 +60,27 @@ public class AuctionMessageTranslatorTest {
 
     @Test
     public void notifiesAuctionFailedWhenBadMessageReceived() {
-        context.checking(new Expectations() {{
-            exactly(1).of(listener).auctionFailed();
-        }});
+        String badMessage = "bad message";
 
         Message message = new Message();
-        message.setBody("a bad message");
+        message.setBody(badMessage);
 
-        translator.processMessage(UNUSED_CHAT, message);
+        expectFailureWithMessage(badMessage);
+        translator.processMessage(UNUSED_CHAT, message(badMessage));
+    }
+
+    private Message message(String body) {
+        Message message = new Message();
+        message.setBody(body);
+        return message;
+    }
+
+    private void expectFailureWithMessage(final String badMessage) {
+        context.checking(new Expectations() {{
+            oneOf(listener).auctionFailed();
+            oneOf(failureReporter).cannotTranslateMessage(with(SNIPER_ID),
+                    with(badMessage), with(any(Exception.class)));
+        }});
     }
 
     @Test
