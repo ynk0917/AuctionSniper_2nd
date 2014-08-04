@@ -10,7 +10,6 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import test.endtoend.auctionsniper.ApplicationRunner;
 
 
 @RunWith(JMock.class)

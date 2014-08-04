@@ -8,15 +8,20 @@ import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.util.Announcer;
 
+import java.util.logging.Logger;
+
 public class XMPPAuction implements Auction {
-    private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
-    private final Chat chat;
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Event: Bid; Price: %d";
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Event: JOIN;";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_ID_FORMAT = XMPPAuction.ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuctionHouse.AUCTION_RESOURCE;
-    
-    public XMPPAuction(XMPPConnection connection, String itemId) {
+
+    private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
+    private final Chat chat;
+    private final XMPPFailureReporter failureReporter;
+
+    public XMPPAuction(XMPPConnection connection, String itemId, XMPPFailureReporter failureReporter) {
+        this.failureReporter = failureReporter;
         AuctionMessageTranslator translator = translatorFor(connection);
         chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection),
@@ -25,7 +30,7 @@ public class XMPPAuction implements Auction {
     }
 
     private AuctionMessageTranslator translatorFor(XMPPConnection connection) {
-        return new AuctionMessageTranslator(connection.getUser(), auctionEventListeners.announce(), null);
+        return new AuctionMessageTranslator(connection.getUser(), auctionEventListeners.announce(), failureReporter);
     }
 
     private AuctionEventListener chatDisconnectorFor(final AuctionMessageTranslator translator) {

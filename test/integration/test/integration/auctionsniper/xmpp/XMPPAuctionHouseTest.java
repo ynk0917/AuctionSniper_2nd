@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import auctionsniper.UserRequestListener;
+import auctionsniper.xmpp.XMPPAuctionException;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class XMPPAuctionHouseTest {
     private XMPPAuctionHouse auctionHouse;
 
     @Before
-    public void openConnection() throws XMPPException {
+    public void openConnection() throws XMPPAuctionException {
         auctionHouse= XMPPAuctionHouse.connect(FakeAuctionServer.XMPP_HOSTNAME, ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD);
     }
     
